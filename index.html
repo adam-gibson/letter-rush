@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Letter Rush</title>
+  <meta name="description" content="A party word game: draw a letter and think of an answer for each category.">
+  <meta name="theme-color" content="#2457c5">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Letter Rush">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="brand"><img src="icons/icon.svg" alt="" width="32" height="32">Letter Rush</h1>
+    <!-- Account area: only shown once Supabase is configured in js/config.js -->
+    <div id="account" class="account" hidden>
+      <button id="signin-btn" class="btn small" type="button">Sign in</button>
+      <div id="account-menu" class="account-menu" hidden>
+        <span id="account-email" class="account-email"></span>
+        <button id="signout-btn" class="btn small" type="button">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Setup ===== -->
+    <section id="setup-screen" class="setup" aria-labelledby="setup-title">
+      <h2 id="setup-title" class="sr-only">Set up a game</h2>
+
+      <div class="card cat-card">
+        <div class="card-head">
+          <div>
+            <h3>Categories</h3>
+            <p id="chosen-count" class="hint">0 of 6 chosen</p>
+          </div>
+          <div class="row">
+            <button id="randomise-btn" class="btn primary" type="button">Randomise</button>
+            <button id="clear-btn" class="btn" type="button">Clear</button>
+          </div>
+        </div>
+
+        <ol id="chosen-list" class="chips chosen" aria-label="Chosen categories"></ol>
+
+        <label class="sr-only" for="category-filter">Search categories</label>
+        <input id="category-filter" class="input" type="search" placeholder="Search categories…" autocomplete="off">
+
+        <ul id="category-grid" class="chips grid" aria-label="All categories"></ul>
+
+        <details class="custom">
+          <summary>My categories</summary>
+          <form id="custom-form" class="custom-form">
+            <label class="sr-only" for="custom-input">New category</label>
+            <input id="custom-input" class="input" type="text" maxlength="40" placeholder="Add your own, e.g. Famous scientist" autocomplete="off" required>
+            <button class="btn primary" type="submit">Add</button>
+          </form>
+          <ul id="custom-list" class="custom-list"></ul>
+        </details>
+      </div>
+
+      <div class="side">
+        <div class="card">
+          <h3>First to</h3>
+          <p class="hint">A reminder of the winning score. Keep score on paper.</p>
+          <div id="target-options" class="segmented" role="group" aria-label="Target score">
+            <button class="btn" type="button" data-target="5">5</button>
+            <button class="btn" type="button" data-target="10">10</button>
+            <button class="btn" type="button" data-target="15">15</button>
+            <button class="btn" type="button" data-target="20">20</button>
+            <button class="btn" type="button" data-target="custom">Custom</button>
+          </div>
+          <div id="custom-target-wrap" class="custom-target" hidden>
+            <label for="custom-target">Custom target</label>
+            <input id="custom-target" class="input" type="number" min="1" max="999" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Letters</h3>
+          <label class="switch">
+            <input id="exclude-toggle" type="checkbox">
+            <span>Exclude difficult letters</span>
+          </label>
+          <label class="sr-only" for="difficult-input">Difficult letters</label>
+          <input id="difficult-input" class="input letters-input" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        </div>
+
+        <div class="start-bar">
+          <button id="start-btn" class="btn primary big block" type="button" disabled>Start game</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Game ===== -->
+    <section id="game-screen" class="game" aria-label="Game" hidden>
+      <div class="game-top">
+        <p class="target-pill">First to <strong id="target-display">10</strong></p>
+        <button id="exit-present-btn" class="btn small present-only" type="button">Exit presentation</button>
+      </div>
+
+      <div class="letter-col">
+        <div id="letter" class="letter is-empty" aria-hidden="true">?</div>
+        <p id="letter-status" class="status" aria-live="polite">Press “Draw letter” to begin</p>
+        <div class="draw-row">
+          <button id="draw-btn" class="btn primary big" type="button">Draw letter</button>
+          <button id="redraw-btn" class="btn big" type="button" disabled>Redraw</button>
+        </div>
+      </div>
+
+      <div class="cats-col">
+        <ol id="game-categories" class="game-cats" aria-label="Categories"></ol>
+        <div class="used">
+          <h3>Letters used</h3>
+          <ul id="used-letters" class="used-list"></ul>
+          <p id="remaining" class="remaining"></p>
+        </div>
+      </div>
+
+      <div class="game-actions">
+        <button id="present-btn" class="btn primary" type="button">Presentation mode</button>
+        <button id="restart-btn" class="btn" type="button">Start again</button>
+        <button id="end-btn" class="btn danger" type="button">End game</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="confirm-dialog">
+    <form method="dialog">
+      <p id="confirm-message"></p>
+      <div class="dialog-actions">
+        <button class="btn" value="cancel">Cancel</button>
+        <button id="confirm-ok" class="btn primary" value="ok">OK</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="signin-dialog">
+    <form id="signin-form">
+      <h2>Sign in</h2>
+      <p class="hint">We will email you a link. Your own categories will sync across devices.</p>
+      <label for="signin-email">Email address</label>
+      <input id="signin-email" class="input" type="email" autocomplete="email" required>
+      <p id="signin-status" class="hint" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button id="signin-cancel" class="btn" type="button">Cancel</button>
+        <button class="btn primary" type="submit">Send link</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
