@@ -22,7 +22,7 @@ const state = {
 const $ = (id) => document.getElementById(id);
 const el = {
   homeScreen: $('home-screen'), homeLink: $('home-link'), helpBtn: $('help-btn'),
-  playBtn: $('play-btn'), installBtn: $('install-btn'), syncHint: $('sync-hint'), syncSigninBtn: $('sync-signin-btn'),
+  playBtn: $('play-btn'), installBtn: $('install-btn'), saveNote: $('save-note'), saveNoteOut: $('save-note-out'), saveNoteIn: $('save-note-in'), syncSigninBtn: $('sync-signin-btn'),
   setupScreen: $('setup-screen'), gameScreen: $('game-screen'),
   chosenCount: $('chosen-count'), chosenList: $('chosen-list'),
   randomiseBtn: $('randomise-btn'), clearBtn: $('clear-btn'),
@@ -222,7 +222,9 @@ async function addCustom(event) {
     state.custom.push(await state.store.addCustomCategory(name));
     el.customInput.value = '';
     renderSetup();
-    toast(`Added “${name}”`);
+    toast(auth.enabled && !state.user
+      ? `Added “${name}” to this browser only. Sign in to save it to your account.`
+      : `Added “${name}”`);
   } catch (err) {
     console.error(err);
     // 23505 = unique violation in Supabase (e.g. added on another device)
@@ -449,7 +451,7 @@ function openSignin() {
 async function initAuth() {
   if (!auth.enabled) return;
   el.account.hidden = false;
-  el.syncHint.hidden = false;
+  el.saveNote.hidden = false;
   el.signinBtn.addEventListener('click', openSignin);
   el.syncSigninBtn.addEventListener('click', openSignin);
   el.signinCancel.addEventListener('click', () => el.signinDialog.close());
@@ -477,7 +479,8 @@ async function handleUser(user) {
   el.signinBtn.hidden = Boolean(user);
   el.accountMenu.hidden = !user;
   el.accountEmail.textContent = user?.email ?? '';
-  el.syncHint.hidden = Boolean(user);
+  el.saveNoteOut.hidden = Boolean(user);
+  el.saveNoteIn.hidden = !user;
   state.store = await createStore(user);
   if (user) {
     if (el.signinDialog.open) el.signinDialog.close();

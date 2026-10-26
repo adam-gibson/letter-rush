@@ -1,6 +1,6 @@
 // Service worker: caches the app shell for offline use.
 // Bump CACHE_VERSION whenever you deploy changes so players get the update.
-const CACHE_VERSION = 'v5';
+const CACHE_VERSION = 'v6';
 const CACHE = `letter-rush-${CACHE_VERSION}`;
 
 const ASSETS = [
@@ -25,7 +25,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS.map((url) => new Request(url, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
@@ -36,28 +36,24 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Stale-while-revalidate for our own files; everything else (e.g. Supabase) goes to the network.
+// Network first for our own files, so a new version is always used together
+// (never new HTML with old CSS/JS); the cache is the offline fallback.
+// Everything else (e.g. Supabase) goes straight to the network.
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
 
-  event.respondWith(
-    caches.open(CACHE).then(async (cache) => {
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    try {
+      const response = await fetch(request, { cache: 'no-cache' });
+      if (response.ok) cache.put(request, response.clone());
+      return response;
+    } catch {
       const cached = await cache.match(request, { ignoreSearch: request.mode === 'navigate' });
-      const network = fetch(request)
-        .then((response) => {
-          if (response.ok) cache.put(request, response.clone());
-          return response;
-        })
-        .catch(() => null);
-      if (cached) {
-        event.waitUntil(network);
-        return cached;
-      }
-      const response = await network;
-      if (response) return response;
-      if (request.mode === 'navigate') return cache.match('./index.html');
+      if (cached) return cached;
+      if (request.mode === 'navigate') return (await cache.match('./index.html')) ?? Response.error();
       return Response.error();
-    }),
-  );
+    }
+  })());
 });

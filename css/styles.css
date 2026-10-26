@@ -177,7 +177,13 @@ main { max-width: 1100px; margin: 0 auto; padding: 16px; padding-bottom: calc(24
 }
 .mine-chip button:hover { background: #ffe3e3; }
 .mine-chip button:focus-visible { outline: 3px solid var(--focus); }
-.sync-hint { margin: 10px 0 0; color: var(--muted); font-size: .9rem; }
+.save-note { margin: 0 0 12px; }
+.save-note-out {
+  display: grid; gap: 10px; justify-items: start; padding: 12px;
+  background: #fff; border: 1.5px solid var(--border); border-left: 5px solid var(--primary); border-radius: 10px;
+}
+.save-note-out p { margin: 0; }
+.save-note-in { margin: 0; padding: 10px 12px; background: #ebfbee; border-radius: 10px; color: #2b8a3e; font-weight: 600; }
 .chip.custom:not(.selected) { border-color: var(--accent); border-style: dashed; }
 .custom-target { margin-top: 12px; display: grid; gap: 6px; max-width: 200px; }
 

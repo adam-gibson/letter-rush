@@ -97,6 +97,13 @@
             <span class="custom-icon" aria-hidden="true">+</span>
             Add your own category
           </h4>
+          <div id="save-note" class="save-note" hidden>
+            <div id="save-note-out" class="save-note-out">
+              <p><strong>You are not signed in.</strong> Categories you add are saved in this browser only and will not appear on other devices.</p>
+              <button id="sync-signin-btn" class="btn small primary" type="button">Sign in to save to your account</button>
+            </div>
+            <p id="save-note-in" class="save-note-in" hidden>✓ Signed in – your categories are saved to your account and available on all your devices.</p>
+          </div>
           <form id="custom-form" class="custom-form" novalidate>
             <label class="sr-only" for="custom-input">New category</label>
             <input id="custom-input" class="input" type="text" maxlength="40" placeholder="e.g. Famous scientist" autocomplete="off" aria-describedby="custom-error">
@@ -105,10 +112,6 @@
           <p id="custom-error" class="field-error" role="alert" hidden></p>
           <p class="custom-mine-label">My categories <span id="custom-count" class="badge">0</span></p>
           <ul id="custom-list" class="custom-list"></ul>
-          <p id="sync-hint" class="sync-hint" hidden>
-            Saved on this device only.
-            <button id="sync-signin-btn" class="link-btn" type="button">Sign in</button> to use them on all your devices.
-          </p>
         </section>
 
         <label class="sr-only" for="category-filter">Search categories</label>
