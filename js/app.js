@@ -28,7 +28,7 @@ const el = {
   randomiseBtn: $('randomise-btn'), clearBtn: $('clear-btn'),
   filter: $('category-filter'), grid: $('category-grid'),
   customForm: $('custom-form'), customInput: $('custom-input'), customList: $('custom-list'), customError: $('custom-error'), customAddBtn: $('custom-add-btn'), customCount: $('custom-count'),
-  targetOptions: $('target-options'), customTargetWrap: $('custom-target-wrap'), customTarget: $('custom-target'),
+  targetOptions: $('target-options'), customTargetWrap: $('custom-target-wrap'), customTarget: $('custom-target'), targetSummary: $('target-summary'),
   excludeToggle: $('exclude-toggle'), difficultInput: $('difficult-input'),
   startBtn: $('start-btn'),
   targetDisplay: $('target-display'), letter: $('letter'), status: $('letter-status'),
@@ -158,6 +158,7 @@ function renderTarget() {
     const pressed = value === 'custom' ? targetIsCustom : !targetIsCustom && Number(value) === target;
     btn.setAttribute('aria-pressed', String(pressed));
   }
+  el.targetSummary.replaceChildren('Winning score: ', h('strong', {}, String(target)), ` point${target === 1 ? '' : 's'}`);
   el.customTargetWrap.hidden = !targetIsCustom;
   el.customTarget.value = target;
 }
@@ -550,6 +551,7 @@ function bindEvents() {
     const value = Math.round(Number(el.customTarget.value));
     if (value >= 1 && value <= 999) {
       state.settings.target = value;
+      el.targetSummary.replaceChildren('Winning score: ', h('strong', {}, String(value)), ` point${value === 1 ? '' : 's'}`);
       saveSettings();
     }
   });

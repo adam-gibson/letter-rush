@@ -185,6 +185,12 @@ main { max-width: 1100px; margin: 0 auto; padding: 16px; padding-bottom: calc(24
 .save-note-out p { margin: 0; }
 .save-note-in { margin: 0; padding: 10px 12px; background: #ebfbee; border-radius: 10px; color: #2b8a3e; font-weight: 600; }
 .chip.custom:not(.selected) { border-color: var(--accent); border-style: dashed; }
+.segmented { display: flex; flex-wrap: wrap; gap: 8px; }
+.segmented .btn { min-width: 56px; }
+.segmented .btn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+.segmented .btn[aria-pressed="true"]::before { content: "✓"; }
+.target-summary { margin: 12px 0 0; font-weight: 600; }
+.target-summary strong { color: var(--primary-dark); font-size: 1.2em; }
 .custom-target { margin-top: 12px; display: grid; gap: 6px; max-width: 200px; }
 
 .switch { display: flex; align-items: center; gap: 12px; min-height: var(--tap); margin-bottom: 8px; font-weight: 600; cursor: pointer; }
