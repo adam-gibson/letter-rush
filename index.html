@@ -17,7 +17,13 @@
 </head>
 <body>
   <header class="app-header">
-    <h1 class="brand"><img src="icons/icon.svg" alt="" width="32" height="32">Letter Rush</h1>
+    <h1 class="brand">
+      <button id="home-link" class="brand-btn" type="button" aria-label="Letter Rush home">
+        <img src="icons/icon.svg" alt="" width="32" height="32">Letter Rush
+      </button>
+    </h1>
+    <div class="header-actions">
+    <button id="help-btn" class="btn small" type="button">How to play</button>
     <!-- Account area: only shown once Supabase is configured in js/config.js -->
     <div id="account" class="account" hidden>
       <button id="signin-btn" class="btn small" type="button">Sign in</button>
@@ -26,9 +32,48 @@
         <button id="signout-btn" class="btn small" type="button">Sign out</button>
       </div>
     </div>
+    </div>
   </header>
 
   <main>
+    <!-- ===== Landing page ===== -->
+    <section id="home-screen" class="home" aria-labelledby="home-title" hidden>
+      <div class="hero">
+        <div class="hero-tiles" aria-hidden="true"><span>L</span><span>R</span><span>?</span></div>
+        <h2 id="home-title">Letter Rush</h2>
+        <p class="tagline">The quick-thinking party word game. One letter, six categories – can you fill them all?</p>
+        <div class="hero-actions">
+          <button id="play-btn" class="btn primary big" type="button">Play now</button>
+          <button id="install-btn" class="btn big" type="button" hidden>Install app</button>
+        </div>
+        <p class="hint">You will need paper and a pen for each player.</p>
+      </div>
+
+      <div class="home-grid">
+        <div class="card">
+          <h3>How to play</h3>
+          <ol class="steps">
+            <li><strong>Choose six categories</strong>, or press <em>Randomise</em>. Set the winning score.</li>
+            <li><strong>Draw a letter.</strong> Agree a time limit, such as two minutes.</li>
+            <li><strong>Write one answer per category</strong>, each beginning with that letter. For example, for <em>B</em>: Banana, Blazer, Brazil…</li>
+            <li><strong>Read your answers out.</strong> Score 1 point for each answer that nobody else wrote. Duplicates and blanks score nothing.</li>
+            <li><strong>Draw the next letter</strong> and play again. The first player to reach the target score wins.</li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <h3>Tips</h3>
+          <ul class="tips">
+            <li><strong>Redraw</strong> swaps a letter nobody likes. It will not come up again this game.</li>
+            <li>Letters never repeat in a game. Q, X and Z are left out unless you choose otherwise.</li>
+            <li><strong>Presentation mode</strong> shows the letter and categories full-screen for a projector or TV, and keeps the screen awake.</li>
+            <li>Add your own categories under <em>My categories</em>. Sign in to use them on all your devices.</li>
+            <li>Install the app to play offline.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== Setup ===== -->
     <section id="setup-screen" class="setup" aria-labelledby="setup-title">
       <h2 id="setup-title" class="sr-only">Set up a game</h2>
@@ -56,6 +101,10 @@
             </span>
             <span class="chevron" aria-hidden="true">▾</span>
           </summary>
+          <p id="sync-hint" class="sync-hint" hidden>
+            Saved on this device only.
+            <button id="sync-signin-btn" class="link-btn" type="button">Sign in</button> to use them on all your devices.
+          </p>
           <form id="custom-form" class="custom-form">
             <label class="sr-only" for="custom-input">New category</label>
             <input id="custom-input" class="input" type="text" maxlength="40" placeholder="Add your own, e.g. Famous scientist" autocomplete="off" required>

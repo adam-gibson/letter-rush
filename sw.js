@@ -1,6 +1,6 @@
 // Service worker: caches the app shell for offline use.
 // Bump CACHE_VERSION whenever you deploy changes so players get the update.
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE = `letter-rush-${CACHE_VERSION}`;
 
 const ASSETS = [

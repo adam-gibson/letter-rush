@@ -46,6 +46,47 @@ h1, h2, h3 { line-height: 1.2; }
 .account, .account-menu { display: flex; align-items: center; gap: 8px; }
 .account-email { color: var(--muted); font-size: .9rem; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* ----- Landing page ----- */
+.brand-btn {
+  display: flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0;
+  border: 0; background: none; color: inherit; font: inherit; cursor: pointer;
+}
+.brand-btn img { border-radius: 8px; }
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.header-actions .btn { white-space: nowrap; }
+@media (max-width: 480px) {
+  .app-header { padding-left: 12px; padding-right: 12px; }
+  .brand { font-size: 1.1rem; }
+  .header-actions { gap: 6px; }
+  .header-actions .btn.small { padding: 0 10px; }
+  .account-email { display: none; }
+}
+.home { display: grid; gap: 16px; }
+.hero { text-align: center; padding: 24px 8px 8px; }
+.hero h2 { margin: 16px 0 8px; font-size: clamp(2rem, 8vw, 3.2rem); font-weight: 900; color: var(--primary-dark); }
+.tagline { max-width: 34em; margin: 0 auto 20px; font-size: 1.15rem; }
+.hero-tiles { display: flex; justify-content: center; gap: 10px; }
+.hero-tiles span {
+  display: grid; place-items: center; width: 64px; height: 64px;
+  background: var(--surface); border: 3px solid var(--primary-soft); border-radius: 16px; box-shadow: var(--shadow);
+  color: var(--accent); font-size: 2.4rem; font-weight: 900;
+}
+.hero-tiles span:nth-child(1) { transform: rotate(-6deg); }
+.hero-tiles span:nth-child(3) { transform: rotate(6deg); color: var(--primary); }
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 12px; }
+.hero-actions .btn { min-width: 200px; }
+.home-grid { display: grid; gap: 16px; }
+.steps, .tips { margin: 8px 0 0; padding-left: 1.4em; }
+.steps li, .tips li { margin-bottom: 10px; }
+.steps li::marker { color: var(--primary); font-weight: 800; }
+@media (min-width: 900px) { .home-grid { grid-template-columns: 1.3fr 1fr; align-items: start; } }
+
+.sync-hint { margin: 8px 14px 0; color: var(--muted); font-size: .9rem; }
+.link-btn {
+  padding: 0; border: 0; background: none; color: var(--primary); font: inherit; font-weight: 700;
+  text-decoration: underline; cursor: pointer; min-height: 0;
+}
+
 main { max-width: 1100px; margin: 0 auto; padding: 16px; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
 
 /* ----- Building blocks ----- */

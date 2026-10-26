@@ -21,6 +21,8 @@ const state = {
 
 const $ = (id) => document.getElementById(id);
 const el = {
+  homeScreen: $('home-screen'), homeLink: $('home-link'), helpBtn: $('help-btn'),
+  playBtn: $('play-btn'), installBtn: $('install-btn'), syncHint: $('sync-hint'), syncSigninBtn: $('sync-signin-btn'),
   setupScreen: $('setup-screen'), gameScreen: $('game-screen'),
   chosenCount: $('chosen-count'), chosenList: $('chosen-list'),
   randomiseBtn: $('randomise-btn'), clearBtn: $('clear-btn'),
@@ -236,6 +238,8 @@ async function loadCustom() {
 // ---------- Game screen ----------
 
 function showScreen(name) {
+  el.homeScreen.hidden = name !== 'home';
+  el.playBtn.textContent = state.game ? 'Continue game' : 'Play now';
   el.setupScreen.hidden = name !== 'setup';
   el.gameScreen.hidden = name !== 'game';
   window.scrollTo(0, 0);
@@ -414,13 +418,17 @@ document.addEventListener('keydown', (e) => {
 
 // ---------- Accounts (inactive until js/config.js is filled in) ----------
 
+function openSignin() {
+  el.signinStatus.textContent = '';
+  el.signinDialog.showModal();
+}
+
 async function initAuth() {
   if (!auth.enabled) return;
   el.account.hidden = false;
-  el.signinBtn.addEventListener('click', () => {
-    el.signinStatus.textContent = '';
-    el.signinDialog.showModal();
-  });
+  el.syncHint.hidden = false;
+  el.signinBtn.addEventListener('click', openSignin);
+  el.syncSigninBtn.addEventListener('click', openSignin);
   el.signinCancel.addEventListener('click', () => el.signinDialog.close());
   el.signinForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -446,6 +454,7 @@ async function handleUser(user) {
   el.signinBtn.hidden = Boolean(user);
   el.accountMenu.hidden = !user;
   el.accountEmail.textContent = user?.email ?? '';
+  el.syncHint.hidden = Boolean(user);
   state.store = await createStore(user);
   if (user) {
     if (el.signinDialog.open) el.signinDialog.close();
@@ -459,9 +468,29 @@ async function handleUser(user) {
   renderSetup();
 }
 
+// ---------- Install prompt (Chrome, Edge, Android) ----------
+
+let installPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  installPrompt = e;
+  el.installBtn.hidden = false;
+});
+el.installBtn.addEventListener('click', async () => {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt = null;
+  el.installBtn.hidden = true;
+});
+window.addEventListener('appinstalled', () => { el.installBtn.hidden = true; });
+
 // ---------- Start-up ----------
 
 function bindEvents() {
+  el.playBtn.addEventListener('click', () => showScreen(state.game ? 'game' : 'setup'));
+  el.homeLink.addEventListener('click', () => showScreen('home'));
+  el.helpBtn.addEventListener('click', () => showScreen('home'));
   el.randomiseBtn.addEventListener('click', randomise);
   el.clearBtn.addEventListener('click', () => {
     state.settings.selected = [];
@@ -529,11 +558,11 @@ async function init() {
   const saved = Game.fromJSON(state.store.loadGame());
   if (saved) {
     state.game = saved;
-    showScreen('game');
     setStatus(saved.current ? `Every answer must begin with ${saved.current}` : 'Press “Draw letter” to begin');
     renderGame();
   }
 
+  showScreen('home');
   initAuth();
 
   if ('serviceWorker' in navigator) {
