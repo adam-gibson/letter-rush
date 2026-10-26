@@ -47,13 +47,15 @@
 
         <ol id="chosen-list" class="chips chosen" aria-label="Chosen categories"></ol>
 
-        <label class="sr-only" for="category-filter">Search categories</label>
-        <input id="category-filter" class="input" type="search" placeholder="Search categories…" autocomplete="off">
-
-        <ul id="category-grid" class="chips grid" aria-label="All categories"></ul>
-
-        <details class="custom">
-          <summary>My categories</summary>
+        <details class="custom-panel">
+          <summary>
+            <span class="custom-icon" aria-hidden="true">✎</span>
+            <span class="custom-text">
+              <span class="custom-title">My categories <span id="custom-count" class="badge">0</span></span>
+              <span class="custom-sub"><span class="when-closed">Tap to add or delete your own categories</span><span class="when-open">Tap to hide</span></span>
+            </span>
+            <span class="chevron" aria-hidden="true">▾</span>
+          </summary>
           <form id="custom-form" class="custom-form">
             <label class="sr-only" for="custom-input">New category</label>
             <input id="custom-input" class="input" type="text" maxlength="40" placeholder="Add your own, e.g. Famous scientist" autocomplete="off" required>
@@ -61,6 +63,12 @@
           </form>
           <ul id="custom-list" class="custom-list"></ul>
         </details>
+
+        <label class="sr-only" for="category-filter">Search categories</label>
+        <input id="category-filter" class="input" type="search" placeholder="Search categories…" autocomplete="off">
+
+        <ul id="category-grid" class="chips grid" aria-label="All categories"></ul>
+
       </div>
 
       <div class="side">

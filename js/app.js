@@ -25,7 +25,7 @@ const el = {
   chosenCount: $('chosen-count'), chosenList: $('chosen-list'),
   randomiseBtn: $('randomise-btn'), clearBtn: $('clear-btn'),
   filter: $('category-filter'), grid: $('category-grid'),
-  customForm: $('custom-form'), customInput: $('custom-input'), customList: $('custom-list'),
+  customForm: $('custom-form'), customInput: $('custom-input'), customList: $('custom-list'), customCount: $('custom-count'),
   targetOptions: $('target-options'), customTargetWrap: $('custom-target-wrap'), customTarget: $('custom-target'),
   excludeToggle: $('exclude-toggle'), difficultInput: $('difficult-input'),
   startBtn: $('start-btn'),
@@ -137,6 +137,7 @@ function renderGrid() {
 }
 
 function renderCustomList() {
+  el.customCount.textContent = state.custom.length;
   if (!state.custom.length) {
     el.customList.replaceChildren(h('li', { class: 'empty' }, 'You have not added any categories yet.'));
     return;
