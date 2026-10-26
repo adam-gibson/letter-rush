@@ -27,7 +27,7 @@ const el = {
   chosenCount: $('chosen-count'), chosenList: $('chosen-list'),
   randomiseBtn: $('randomise-btn'), clearBtn: $('clear-btn'),
   filter: $('category-filter'), grid: $('category-grid'),
-  customForm: $('custom-form'), customInput: $('custom-input'), customList: $('custom-list'), customCount: $('custom-count'),
+  customForm: $('custom-form'), customInput: $('custom-input'), customList: $('custom-list'), customError: $('custom-error'), customAddBtn: $('custom-add-btn'), customCount: $('custom-count'),
   targetOptions: $('target-options'), customTargetWrap: $('custom-target-wrap'), customTarget: $('custom-target'),
   excludeToggle: $('exclude-toggle'), difficultInput: $('difficult-input'),
   startBtn: $('start-btn'),
@@ -141,14 +141,14 @@ function renderGrid() {
 function renderCustomList() {
   el.customCount.textContent = state.custom.length;
   if (!state.custom.length) {
-    el.customList.replaceChildren(h('li', { class: 'empty' }, 'You have not added any categories yet.'));
+    el.customList.replaceChildren(h('li', { class: 'empty' }, 'None yet. Add one above.'));
     return;
   }
   el.customList.replaceChildren(...[...state.custom].sort((a, b) => collate(a.name, b.name)).map((cat) =>
-    h('li', {}, h('span', {}, cat.name), h('button', {
-      type: 'button', class: 'btn small danger', 'aria-label': `Delete ${cat.name}`,
+    h('li', { class: 'mine-chip' }, cat.name, h('button', {
+      type: 'button', 'aria-label': `Delete ${cat.name}`, title: 'Delete',
       onclick: () => deleteCustom(cat),
-    }, 'Delete'))));
+    }, '×'))));
 }
 
 function renderTarget() {
@@ -190,14 +190,34 @@ function randomise() {
   renderGrid();
 }
 
+// Loose match so "fruits", "Boys name" and "Boy's Name" count as existing categories.
+const normalise = (name) => name.toLowerCase().replace(/[^a-z0-9]/g, '').replace(/s$/, '');
+const cleanName = (name) => name.trim().replace(/\s+/g, ' ');
+const findExisting = (name) => allCategoryNames().find((n) => normalise(n) === normalise(name));
+
+function showCustomError(message) {
+  el.customError.textContent = message ?? '';
+  el.customError.hidden = !message;
+  el.customInput.setAttribute('aria-invalid', String(Boolean(message)));
+  el.customAddBtn.disabled = Boolean(message);
+}
+
+function checkCustomInput() {
+  const name = cleanName(el.customInput.value);
+  const existing = name && findExisting(name);
+  showCustomError(existing ? `That category already exists: “${existing}”` : null);
+  return name && !existing ? name : null;
+}
+
 async function addCustom(event) {
   event.preventDefault();
-  const name = el.customInput.value.trim().replace(/\s+/g, ' ');
-  if (!name) return;
-  if (allCategoryNames().some((n) => n.toLowerCase() === name.toLowerCase())) {
-    toast('That category already exists.');
+  if (!cleanName(el.customInput.value)) {
+    showCustomError('Type a category name first.');
+    el.customInput.focus();
     return;
   }
+  const name = checkCustomInput();
+  if (!name) return;
   try {
     state.custom.push(await state.store.addCustomCategory(name));
     el.customInput.value = '';
@@ -205,7 +225,10 @@ async function addCustom(event) {
     toast(`Added “${name}”`);
   } catch (err) {
     console.error(err);
-    toast('Sorry, that category could not be saved.');
+    // 23505 = unique violation in Supabase (e.g. added on another device)
+    showCustomError(err?.code === '23505'
+      ? 'That category already exists in your account.'
+      : 'Sorry, that category could not be saved.');
   }
 }
 
@@ -503,6 +526,7 @@ function bindEvents() {
     renderGrid();
   });
   el.customForm.addEventListener('submit', addCustom);
+  el.customInput.addEventListener('input', checkCustomInput);
 
   el.targetOptions.addEventListener('click', (e) => {
     const btn = e.target.closest('button');

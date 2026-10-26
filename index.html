@@ -92,26 +92,24 @@
 
         <ol id="chosen-list" class="chips chosen" aria-label="Chosen categories"></ol>
 
-        <details class="custom-panel">
-          <summary>
-            <span class="custom-icon" aria-hidden="true">✎</span>
-            <span class="custom-text">
-              <span class="custom-title">My categories <span id="custom-count" class="badge">0</span></span>
-              <span class="custom-sub"><span class="when-closed">Tap to add or delete your own categories</span><span class="when-open">Tap to hide</span></span>
-            </span>
-            <span class="chevron" aria-hidden="true">▾</span>
-          </summary>
+        <section class="custom-panel" aria-labelledby="custom-title">
+          <h4 id="custom-title" class="custom-title">
+            <span class="custom-icon" aria-hidden="true">+</span>
+            Add your own category
+          </h4>
+          <form id="custom-form" class="custom-form" novalidate>
+            <label class="sr-only" for="custom-input">New category</label>
+            <input id="custom-input" class="input" type="text" maxlength="40" placeholder="e.g. Famous scientist" autocomplete="off" aria-describedby="custom-error">
+            <button id="custom-add-btn" class="btn primary" type="submit">Add</button>
+          </form>
+          <p id="custom-error" class="field-error" role="alert" hidden></p>
+          <p class="custom-mine-label">My categories <span id="custom-count" class="badge">0</span></p>
+          <ul id="custom-list" class="custom-list"></ul>
           <p id="sync-hint" class="sync-hint" hidden>
             Saved on this device only.
             <button id="sync-signin-btn" class="link-btn" type="button">Sign in</button> to use them on all your devices.
           </p>
-          <form id="custom-form" class="custom-form">
-            <label class="sr-only" for="custom-input">New category</label>
-            <input id="custom-input" class="input" type="text" maxlength="40" placeholder="Add your own, e.g. Famous scientist" autocomplete="off" required>
-            <button class="btn primary" type="submit">Add</button>
-          </form>
-          <ul id="custom-list" class="custom-list"></ul>
-        </details>
+        </section>
 
         <label class="sr-only" for="category-filter">Search categories</label>
         <input id="category-filter" class="input" type="search" placeholder="Search categories…" autocomplete="off">
