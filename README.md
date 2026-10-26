@@ -58,7 +58,7 @@ The code is already written; it switches on when configured.
 1. Supabase dashboard → **SQL Editor**: run `supabase/schema.sql`.
 2. **Authentication → Sign In / Providers**: make sure *Email* is enabled.
 3. **Authentication → URL Configuration**: set *Site URL* to your GitHub Pages URL and add it (and `http://localhost:8000/` for testing) to *Redirect URLs*.
-4. **Project Settings → API**: copy the *Project URL* and *anon public* key into `js/config.js`.
+4. **Project Settings → API**: copy the *Project URL* and *publishable (or legacy anon)* key into `js/config.js`.
 5. Bump `CACHE_VERSION` in `sw.js` and deploy.
 
 A **Sign in** button then appears in the header. Players receive a magic link by email. On first sign-in on a device, any categories saved locally are copied to their account. Settings and the game in progress remain on the device. Signed-in categories are cached so they still show offline.

@@ -2,7 +2,7 @@
 // Fill these in (Supabase dashboard → Project Settings → API) to enable email
 // sign-in and synced custom categories. The anon key is safe to publish:
 // access is controlled by the row-level security policies in supabase/schema.sql.
-export const SUPABASE_URL = '';
-export const SUPABASE_ANON_KEY = '';
+export const SUPABASE_URL = 'https://skfoswlyobjwcptfxvkf.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_umsU-H7mRUz3NYLicLjrWw_AtkJqHDu';
 
-export const SUPABASE_JS_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+export const SUPABASE_JS_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/+esm';
